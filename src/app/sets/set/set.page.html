@@ -1,0 +1,38 @@
+<ion-header  [translucent]='true'>
+  <ion-toolbar>
+    <ion-title>Nieuwe set</ion-title>
+
+    <ion-buttons slot='start'>
+
+      <ion-back-button defaultHref='/'></ion-back-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]='true' >
+
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Benoeming' type='text'
+               [(ngModel)]="title"></ion-input>
+  </ion-item>
+
+
+  <ion-item class='ion-margin-top'>
+    <ion-input  placeholder='Taal' type='text'
+                [(ngModel)]="language"></ion-input>
+  </ion-item>
+
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input  placeholder='Jaar Uitgave' type='text'
+                [(ngModel)]="releaseYear"></ion-input>
+  </ion-item>
+
+  <ion-fab  vertical="bottom" horizontal='end' slot='fixed'>
+    <ion-fab-button [disabled]="(!title || title.length === 0)"
+                    color="fab" (click)="updateSet()" >
+      <ion-icon name='checkmark-circle' ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+

@@ -1,0 +1,16 @@
+<ion-app>
+  <ion-menu #menu side='start' menuId="side-menu" contentId='main'>
+    <ion-header>
+      <ion-toolbar color='primary'>
+        <ion-title>Verzamelkaarten</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-list lines='full' (click)='menu.close()'>
+        <ion-item [routerLink]="['home']" >Kaarten</ion-item>
+        <ion-item [routerLink]="['sets']" >Kaartsets</ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+  <ion-router-outlet id='main'></ion-router-outlet>
+</ion-app>

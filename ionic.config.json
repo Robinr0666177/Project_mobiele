@@ -1,0 +1,7 @@
+{
+  "name": "Verzamelkaarten",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
