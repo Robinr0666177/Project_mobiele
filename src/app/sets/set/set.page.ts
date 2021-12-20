@@ -20,8 +20,10 @@ export class SetPage implements OnInit {
   constructor(private  readonly supabase: SetService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute) { }
 
-  ngOnInit() {
+  ngOnInit(): void{
+    this.setData();
   }
+
 
   // You have retrieved data asynchronously, thus
   // the method should be async.
@@ -40,6 +42,15 @@ export class SetPage implements OnInit {
     this.releaseYear = set.release_year;
   }
 
+  toggleCreateAndUpdate(): void {
+    if(this.id === undefined) {
+      this.createSet();
+    } else {
+      this.updateSet();
+    }
+    this.navController.back();
+  }
+
   //set.page
   async createSet() {
     let errorMessage = '';
@@ -47,12 +58,31 @@ export class SetPage implements OnInit {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
         const {error} = await this.supabase.createSet(this.title, this.language, this.releaseYear);
-        await  this.navController.back();
-      }
-      else{
+      }else{
         await this.presentToast(errorMessage);
       }
     } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async updateSet() {
+    let errorMessage = '';
+    try {
+      errorMessage = this.validateFields();
+      if(errorMessage.length === 0){
+        //kan geen const {error} zetten
+        await this.supabase.updateSet({
+          id: this.id,
+          title: this.title,
+          language: this.language,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          release_year: this.releaseYear
+        });
+      }else {
+        await this.presentToast(errorMessage);
+      }
+    }catch (error){
       console.log(error);
     }
   }

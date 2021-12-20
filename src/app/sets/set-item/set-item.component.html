@@ -1,5 +1,5 @@
 <ion-item>
-  <ion-label (click)="router.navigate([], {relativeTo: activatedRoute})">
+  <ion-label (click)="router.navigate(['/sets', 'set', set.id], {relativeTo: activatedRoute})">
 
     {{set.title}}
   </ion-label>

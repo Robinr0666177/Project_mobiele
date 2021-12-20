@@ -29,6 +29,7 @@ export class SetService {
    * The return type must be an array of ISet objects and must be
    * added to the method declaration. If this isn't done,
    * autocompletion or intellisense are not available.
+   *
    * @param id
    */
   async getSetById(id: number): Promise<ISet>{
@@ -44,7 +45,7 @@ export class SetService {
     return data;
   }
 
-  async updateSet(updateSet: ISet): Promise<void> {
+  async updateSet(updateSet: ISet){
     const set = this.getSetById(updateSet.id);
     if(set !== undefined){
       await this.supabase.from('set').insert(set,  {

@@ -1,6 +1,7 @@
 <ion-header  [translucent]='true'>
   <ion-toolbar>
-    <ion-title>Nieuwe set</ion-title>
+    <ion-title *ngIf='id === undefined'>Nieuwe set</ion-title>
+    <ion-title *ngIf='id !== undefined'>Bewerk set</ion-title>
 
     <ion-buttons slot='start'>
 
@@ -30,7 +31,7 @@
 
   <ion-fab  vertical="bottom" horizontal='end' slot='fixed'>
     <ion-fab-button [disabled]="(!title || title.length === 0)"
-                    color="fab" (click)="createSet()" >
+                    color="fab" (click)="toggleCreateAndUpdate()" >
       <ion-icon name='checkmark-circle' ></ion-icon>
     </ion-fab-button>
   </ion-fab>
