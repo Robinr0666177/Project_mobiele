@@ -20,7 +20,7 @@ export class SetService {
   async getSets() {
     const {data, error} = await this.supabase
       .from('set')
-      .select('title, language, release_year');
+      .select('id,title, language, release_year');
     return data;
   }
 
@@ -37,7 +37,7 @@ export class SetService {
       // Add the datatype of the returned row(s) to the from
       // method.
       .from<ISet>('set')
-      .select('title, language, release_year')
+      .select('id,title, language, release_year')
       .eq('id' ,id)
       // Add the single method when you expect a single row.
       // If you don't add this, the result will be an array.
@@ -48,7 +48,7 @@ export class SetService {
   async updateSet(updateSet: ISet){
     const set = this.getSetById(updateSet.id);
     if(set !== undefined){
-      await this.supabase.from('set').insert(set,  {
+      await this.supabase.from('set').upsert(set,  {
         returning: 'minimal', //
       });
     }else{

@@ -48,7 +48,7 @@ export class SetPage implements OnInit {
     } else {
       this.updateSet();
     }
-    this.navController.back();
+
   }
 
   //set.page
@@ -58,6 +58,7 @@ export class SetPage implements OnInit {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
         const {error} = await this.supabase.createSet(this.title, this.language, this.releaseYear);
+        this.navController.back();
       }else{
         await this.presentToast(errorMessage);
       }
@@ -72,13 +73,14 @@ export class SetPage implements OnInit {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
         //kan geen const {error} zetten
-        await this.supabase.updateSet({
+          await this.supabase.updateSet({
           id: this.id,
           title: this.title,
           language: this.language,
           // eslint-disable-next-line @typescript-eslint/naming-convention
           release_year: this.releaseYear
         });
+        this.navController.back();
       }else {
         await this.presentToast(errorMessage);
       }

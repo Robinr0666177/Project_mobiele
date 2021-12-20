@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'set',
     loadChildren: () => import('./set/set.module').then( m => m.SetPageModule)
   },
+  {
+    path: 'set/:id',
+    loadChildren: () => import('./set/set.module').then( m => m.SetPageModule)
+  }
 ];
 
 @NgModule({
