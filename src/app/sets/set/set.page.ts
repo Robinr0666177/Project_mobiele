@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {Set} from '../../../datatypes/set';
+import {ISet} from '../../../datatypes/ISet';
 import {SetService} from '../../services/set.service';
 import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   selector: 'app-set',
@@ -10,36 +11,43 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./set.page.scss'],
 })
 export class SetPage implements OnInit {
+  id? = null;
   title = '';
   language = '';
   releaseYear = null;
 
-  set: Set | undefined;
+  set: ISet | undefined;
   constructor(private  readonly supabase: SetService, public toastController: ToastController,
-              public navController: NavController) { }
+              public navController: NavController, public activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {
   }
 
+  // You have retrieved data asynchronously, thus
+  // the method should be async.
+  async setData(): Promise<void> {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if(id === null){
+      return;
+    }
+
+    this.id = parseInt(id, 10);
+
+    const set = await this.supabase.getSetById(this.id);
+    this.title = set.title;
+    this.language = set.language;
+    this.releaseYear = set.release_year;
+  }
+
   //set.page
-  async updateSet() {
+  async createSet() {
     let errorMessage = '';
     try {
-      if(this.title.length === 0){
-        errorMessage += 'De naam van de set dient ingediend te zijn.\n';
-      }
-      if(this.language.length === 0){
-        errorMessage += 'De taal dient ingevuld te zijn.\n';
-      }
-      if(this.releaseYear !== null){
-          if(!parseInt(this.releaseYear, 10)){
-            errorMessage += 'het jaar dient een numerieke waarde te zijn. \n';
-          }
-      }
-      else { errorMessage += 'Het jaar dient ingevuld te zijn.\n';}
+      errorMessage = this.validateFields();
       if(errorMessage.length === 0){
-        const {error} = await this.supabase.updateSet(this.title, this.language, this.releaseYear);
-        this.navController.back();
+        const {error} = await this.supabase.createSet(this.title, this.language, this.releaseYear);
+        await  this.navController.back();
       }
       else{
         await this.presentToast(errorMessage);
@@ -49,6 +57,22 @@ export class SetPage implements OnInit {
     }
   }
 
+  validateFields(){
+    let errorMessage = '';
+      if(this.title.length === 0){
+        errorMessage += 'De naam van de set dient ingediend te zijn.\n';
+      }
+      if(this.language.length === 0){
+        errorMessage += 'De taal dient ingevuld te zijn.\n';
+      }
+      if(this.releaseYear !== null){
+        if(!parseInt(this.releaseYear, 10)){
+          errorMessage += 'het jaar dient een numerieke waarde te zijn. \n';
+        }
+      }
+      else { errorMessage += 'Het jaar dient ingevuld te zijn.\n';}
+      return errorMessage;
+  }
 
   async presentToast(errorMessage) {
     const toast = await this.toastController.create({
