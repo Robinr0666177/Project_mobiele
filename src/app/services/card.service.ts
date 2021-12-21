@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {createClient, SupabaseClient} from '@supabase/supabase-js';
 import {environment} from '../../environments/environment';
+import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@capacitor/camera';
 import {ISet} from '../../datatypes/ISet';
 import {ICard} from '../../datatypes/ICard';
 
@@ -9,6 +10,9 @@ import {ICard} from '../../datatypes/ICard';
 })
 export class CardService {
   private supabase: SupabaseClient;
+
+  //ik heb enkel photos nodig
+  private permissionGranted: PermissionStatus = {camera: 'granted', photos: 'granted'};
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
@@ -67,7 +71,7 @@ export class CardService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
         set_id,
         description,
-        condition,
+        cardState: condition,
         value,
         amount,
         image

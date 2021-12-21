@@ -10,6 +10,44 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  1 kaart toevoegen of bewerken
+<ion-content [fullscreen]='true' >
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Benoeming' type='text'
+               ></ion-input>
+  </ion-item>
+
+
+  <ion-item class='ion-margin-top'>
+    <ion-input  placeholder='Taal' type='text'
+                ></ion-input>
+  </ion-item>
+  <ion-item class='ion-margin-top'>
+    <ion-label>Kaarttype</ion-label>
+    <ion-select interface='popover'>
+      <ion-select-option value="">Selecteer een type</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item class='ion-margin-top'>
+    <ion-label>Set</ion-label>
+    <ion-select interface='popover'>
+      <ion-select-option value="">Selecteer een set</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+  <ion-item class='ion-margin-top'>
+    <ion-input  placeholder='Waarde' type='text'
+    ></ion-input>
+  </ion-item>
+
+  <ion-item class='ion-margin-top'>
+    <ion-input  placeholder='Aantal' type='text'
+    ></ion-input>
+  </ion-item>
+
+  <ion-item class='ion-margin-top'>
+    <ion-textarea placeholder='Beschrijving' type='text'>
+    </ion-textarea>
+  </ion-item>
+
 </ion-content>
