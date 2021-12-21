@@ -44,7 +44,7 @@ export class SetPage implements OnInit {
   }
 
   toggleCreateAndUpdate(): void {
-    if(this.id === undefined) {
+    if(this.id === null) {
       this.createSet();
     } else {
       this.updateSet();
@@ -83,7 +83,6 @@ export class SetPage implements OnInit {
           id: this.id,
           title: this.title,
           language: this.language,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           release_year: this.releaseYear
         });
         this.navController.back();
@@ -104,6 +103,8 @@ export class SetPage implements OnInit {
         errorMessage += 'De taal dient ingevuld te zijn.\n';
       }
       if(this.releaseYear !== null){
+        //!parseInt(this.releaseYear, 10)
+        //this.releaseYear.match(/^[1-9][0-9]*$/) === null
         if(!parseInt(this.releaseYear, 10)){
           errorMessage += 'het jaar dient een numerieke waarde te zijn. \n';
         }

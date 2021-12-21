@@ -12,7 +12,6 @@ export class SetService {
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
-    //this.getSets();
   }
 
   //get methode om sets op te halen
@@ -58,13 +57,14 @@ export class SetService {
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   async createSet(title, language, release_year) {
-    const update: ISet = {
+    console.log(title, language, release_year);
+    const newSet: ISet = {
       title,
       language,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       release_year
     };
-    return this.supabase.from('set').upsert(update,  {
+    return this.supabase.from('set').upsert(newSet,  {
       returning: 'minimal', //
     });
   }
