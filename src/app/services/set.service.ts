@@ -46,9 +46,9 @@ export class SetService {
   }
 
   async updateSet(updateSet: ISet){
-    const set = this.getSetById(updateSet.id);
+    const set = await this.getSetById(updateSet.id);
     if(set !== undefined){
-      await this.supabase.from('set').upsert(set,  {
+      await this.supabase.from('set').upsert(updateSet,  {
         returning: 'minimal', //
       });
     }else{
@@ -69,13 +69,12 @@ export class SetService {
     });
   }
 
-
-
   async deleteSet(id) {
-    this.supabase
+    const {error} = await this.supabase
       .from('set')
       .delete()
       .eq('id', id);
+    return error;
   }
 
 

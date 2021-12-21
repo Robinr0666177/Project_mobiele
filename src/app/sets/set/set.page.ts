@@ -5,6 +5,7 @@ import { ToastController } from '@ionic/angular';
 import { NavController } from '@ionic/angular';
 import {ActivatedRoute} from '@angular/router';
 
+
 @Component({
   selector: 'app-set',
   templateUrl: './set.page.html',
@@ -48,7 +49,12 @@ export class SetPage implements OnInit {
     } else {
       this.updateSet();
     }
+  }
 
+  async deleteSet(){
+    const error = await this.supabase.deleteSet(this.id);
+    console.log(error);
+    this.navController.back();
   }
 
   //set.page
@@ -113,5 +119,11 @@ export class SetPage implements OnInit {
     });
     await toast.present();
   }
+
+  // clickMethod() {
+  //   if(confirm('Are you sure to delete ')) {
+  //     alert('verwijderd');
+  //   }
+  // }
 
 }
