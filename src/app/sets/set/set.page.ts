@@ -83,6 +83,7 @@ export class SetPage implements OnInit {
           id: this.id,
           title: this.title,
           language: this.language,
+            // eslint-disable-next-line @typescript-eslint/naming-convention
           release_year: this.releaseYear
         });
         this.navController.back();

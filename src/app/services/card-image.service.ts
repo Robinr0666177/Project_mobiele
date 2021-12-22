@@ -39,6 +39,15 @@ export class CardImageService {
     return fileName;
   }
 
+  getPublicURL(filename) {
+    const { publicURL, error } = this.supabase
+      .storage
+      .from('cards')
+      .getPublicUrl(filename);
+    console.log(publicURL);
+    return publicURL;
+  }
+
   private havePhotosPermission(): boolean {
     return this.permissionGranted.photos === 'granted';
   }
@@ -50,4 +59,5 @@ export class CardImageService {
       console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
     }
   }
+
 }

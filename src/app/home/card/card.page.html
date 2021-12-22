@@ -10,21 +10,31 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]='true' >
+<ion-content [fullscreen]='true'
+             [scrollEvents]='true'
+             (ionScrollStart)="logScrollStart()"
+             (ionScrollEnd)="logScrollEnd()">
+
+  <div id="container" class="ion-text-center">
+    <ion-button color='fab' style="font-size: 0.5em" (click)="takePhoto()">Selecteer kaartafbeelding</ion-button>
+    <br/>
+    <img *ngIf="photo"  [src]="getDataUrl()" height="250">
+  </div>
+
   <ion-item lines='full' class='ion-margin-top'>
     <ion-input placeholder='Benoeming' type='text'
-               ></ion-input>
+               [(ngModel)]="name"></ion-input>
   </ion-item>
 
-
-  <ion-item class='ion-margin-top'>
-    <ion-input  placeholder='Taal' type='text'
-                ></ion-input>
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Kaartcode' type='text'
+               [(ngModel)]="cardNumber"></ion-input>
   </ion-item>
+
   <ion-item class='ion-margin-top'>
     <ion-label>Kaarttype</ion-label>
-    <ion-select interface='popover'>
-      <ion-select-option value="">Selecteer een type</ion-select-option>
+    <ion-select interface='popover' >
+      <ion-select-option *ngFor='let type of types' [value]='id' ]>{{type.name}}</ion-select-option>
     </ion-select>
   </ion-item>
 
@@ -35,19 +45,26 @@
     </ion-select>
   </ion-item>
 
-  <ion-item class='ion-margin-top'>
-    <ion-input  placeholder='Waarde' type='text'
-    ></ion-input>
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Waarde' type='text'
+               [(ngModel)]="value"></ion-input>
   </ion-item>
 
+
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Aantal' type='text'
+               [(ngModel)]="amount"></ion-input>
+  </ion-item>
   <ion-item class='ion-margin-top'>
-    <ion-input  placeholder='Aantal' type='text'
-    ></ion-input>
+    <ion-textarea placeholder='Beschrijving' type='text'
+                  [(ngModel)]="description"></ion-textarea>
   </ion-item>
 
-  <ion-item class='ion-margin-top'>
-    <ion-textarea placeholder='Beschrijving' type='text'>
-    </ion-textarea>
-  </ion-item>
+  <ion-fab *ngIf='buttonIsVisible' [vertical]='verticalButtonPosition'  vertical='bottom' horizontal='end' slot='fixed'>
+    <ion-fab-button [disabled]="(!name || name.length === 0)"
+                    color='fab' (click)='createCard()' >
+      <ion-icon name='checkmark-circle' ></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 
 </ion-content>

@@ -24,24 +24,39 @@ export class CardPage implements OnInit {
   condition? ='';
   value? = null;
   amount?: null;
-  image?: '';
+  image?: string;
 
   photo: Photo;
 
   card: ICard | undefined;
 
-  //de PermissionStatus dwingt om zowel toestemming te vragen voor het gebruik van de camera als de photos;
-  // ik wil enkel foto's uit de opslag kunnen halen, ik wil geen foto's maken
-  private permissionGranted: PermissionStatus = {camera: 'granted', photos: 'granted'};
+  verticalButtonPosition = 'bottom';
+  buttonIsVisible = true;
+
+  //ngfor werkt alleen bij arrays
+  types = [];
+  //dit werkt zeker niet
+  sets = this.supabase.getSets();
 
   constructor(private  readonly supabase: CardService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute
               ,public cardImageservice: CardImageService) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    //hoe moet dit omgezet worden naar een array?
+    this.types = await this.supabase.getTypes();
+    this.sets = this.supabase.getSets();
   }
 
   //databaseoperations
+
+  logScrollStart(): void {
+    this.buttonIsVisible = false;
+  }
+
+  logScrollEnd(): void {
+    setTimeout(() => this.buttonIsVisible = true, 2000);
+  }
 
   async updateCard(){
 
@@ -52,10 +67,16 @@ export class CardPage implements OnInit {
     let errorMessage = '';
     try {
       errorMessage = this.validateFields();
+      console.log(errorMessage);
       if(errorMessage.length === 0){
-
-
-        const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,this.description,this.condition,this.value,this.amount,this.image);
+        //deze methode moet de image property instellen
+        await this.uploadPhoto();
+        //voorlopig
+        this.typeId = 1;
+        this.setId = 1;
+        const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
+                                                       this.description,this.condition,this.value,
+                                                       this.amount,this.image);
         this.navController.back();
       }else{
         await this.presentToast(errorMessage);
@@ -71,10 +92,20 @@ export class CardPage implements OnInit {
     this.photo = await this.cardImageservice.takePicture();
   }
 
+  async uploadPhoto() {
+    const filename = await this.cardImageservice.uploadPicture(this.photo, this.cardNumber);
+    this.image = this.cardImageservice.getPublicURL(filename);
+  }
+
+  getDataUrl() {
+    return `data:image/${this.photo?.format};base64,${this.photo.base64String}`;
+  }
+
   //helper methods
 
   validateFields(){
     let errorMessage = '';
+    console.log(errorMessage);
     if(this.name.length === 0){
       errorMessage += 'De naam van de kaart dient ingediend te zijn.\n';
     }
@@ -84,7 +115,6 @@ export class CardPage implements OnInit {
     if(this.typeId.match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'De type van de kaart dient geselecteerd te zijn. \n';
     }
-
     return errorMessage;
   }
 
@@ -138,28 +168,28 @@ export class CardPage implements OnInit {
 
 
 
-  private havePhotosPermission(): boolean {
-    return this.permissionGranted.photos === 'granted';
-  }
-
-  private haveCameraPermission(): boolean {
-    return this.permissionGranted.camera === 'granted';
-  }
-
-  private determinePhotoSource(): CameraSource {
-    if (this.havePhotosPermission() && this.haveCameraPermission()) {
-      return CameraSource.Prompt;
-    } else {
-      return this.havePhotosPermission() ? CameraSource.Photos : CameraSource.Camera;
-    }
-  }
-
-  private async requestPermissions(): Promise<void> {
-    try {
-      this.permissionGranted = await Camera.requestPermissions({permissions: ['photos', 'camera']});
-    } catch (error) {
-      console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
-    }
-  }
+  // private havePhotosPermission(): boolean {
+  //   return this.permissionGranted.photos === 'granted';
+  // }
+  //
+  // private haveCameraPermission(): boolean {
+  //   return this.permissionGranted.camera === 'granted';
+  // }
+  //
+  // private determinePhotoSource(): CameraSource {
+  //   if (this.havePhotosPermission() && this.haveCameraPermission()) {
+  //     return CameraSource.Prompt;
+  //   } else {
+  //     return this.havePhotosPermission() ? CameraSource.Photos : CameraSource.Camera;
+  //   }
+  // }
+  //
+  // private async requestPermissions(): Promise<void> {
+  //   try {
+  //     this.permissionGranted = await Camera.requestPermissions({permissions: ['photos', 'camera']});
+  //   } catch (error) {
+  //     console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
+  //   }
+  // }
 
 }
