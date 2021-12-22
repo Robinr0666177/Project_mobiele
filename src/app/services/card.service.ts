@@ -4,6 +4,7 @@ import {environment} from '../../environments/environment';
 import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@capacitor/camera';
 import {ISet} from '../../datatypes/ISet';
 import {ICard} from '../../datatypes/ICard';
+import {CardImageService} from './card-image.service';
 
 @Injectable({
   providedIn: 'root'
