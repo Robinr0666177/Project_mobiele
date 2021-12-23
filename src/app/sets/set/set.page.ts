@@ -103,7 +103,7 @@ export class SetPage implements OnInit {
       if(this.releaseYear !== null){
         //!parseInt(this.releaseYear, 10)
         //
-        if(this.releaseYear.match(/^[1-9][0-9]*$/) === null){
+        if(this.releaseYear.toString().match(/^[1-9][0-9]*$/) === null){
           errorMessage += 'het jaar dient een numerieke waarde te zijn. \n';
         }
       }

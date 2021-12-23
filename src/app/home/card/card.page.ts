@@ -18,13 +18,14 @@ export class CardPage implements OnInit {
   id? = null;
   name = '';
   cardNumber = null;
-  typeId = null;
+  typeId: number;
+  //typeId: null;
   setId? = null;
   description? = '';
   condition? ='';
   value? = null;
-  amount?: null;
-  image?: string;
+  amount? = null;
+  image? : string;
 
   photo: Photo;
 
@@ -33,19 +34,16 @@ export class CardPage implements OnInit {
   verticalButtonPosition = 'bottom';
   buttonIsVisible = true;
 
-  //ngfor werkt alleen bij arrays
   types = [];
-  //dit werkt zeker niet
-  sets = this.supabase.getSets();
+  sets = [];
 
   constructor(private  readonly supabase: CardService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute
               ,public cardImageservice: CardImageService) { }
 
   async ngOnInit() {
-    //hoe moet dit omgezet worden naar een array?
     this.types = await this.supabase.getTypes();
-    this.sets = this.supabase.getSets();
+    this.sets = await this.supabase.getSets();
   }
 
   //databaseoperations
@@ -69,14 +67,17 @@ export class CardPage implements OnInit {
       errorMessage = this.validateFields();
       console.log(errorMessage);
       if(errorMessage.length === 0){
-        //deze methode moet de image property instellen
-        await this.uploadPhoto();
-        //voorlopig
-        this.typeId = 1;
-        this.setId = 1;
+        if(this.photo){
+          await this.uploadPhoto();
+          console.log('foto is niet null');
+        }else {
+          console.log('geen foto opgegeven');
+        }
+        console.log(this.typeId);
         const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
                                                        this.description,this.condition,this.value,
                                                        this.amount,this.image);
+        console.log(error);
         this.navController.back();
       }else{
         await this.presentToast(errorMessage);
@@ -98,7 +99,9 @@ export class CardPage implements OnInit {
   }
 
   getDataUrl() {
-    return `data:image/${this.photo?.format};base64,${this.photo.base64String}`;
+    if(this.photo !== undefined){
+      return `data:image/${this.photo?.format};base64,${this.photo.base64String}`;
+    }
   }
 
   //helper methods
@@ -109,12 +112,22 @@ export class CardPage implements OnInit {
     if(this.name.length === 0){
       errorMessage += 'De naam van de kaart dient ingediend te zijn.\n';
     }
-    if(this.cardNumber.length === 0){
+    if(this.cardNumber === null){
       errorMessage += 'De kaartcode dient ingevuld te zijn.\n';
     }
-    if(this.typeId.match(/^[1-9][0-9]*$/) === null){
+    if(this.typeId.toString().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'De type van de kaart dient geselecteerd te zijn. \n';
     }
+    if(this.setId !== null && this.setId.toString().match(/^[1-9][0-9]*$/) === null){
+      errorMessage += 'Ongeldige set geselecteerd \n';
+    }
+    if(this.value !== null && this.value.toString().match(/^[1-9][0-9]*$/) === null){
+      errorMessage += 'Waarde dient numeriek te zijn \n';
+    }
+    if(this.amount !== null && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
+      errorMessage += 'Waarde dient numeriek te zijn \n';
+    }
+
     return errorMessage;
   }
 
@@ -125,71 +138,4 @@ export class CardPage implements OnInit {
     });
     await toast.present();
   }
-
-
-//photo operations
-
-  // async takePhoto(): Promise<string> {
-  //   if (!this.haveCameraPermission() || !this.havePhotosPermission()) {
-  //     await this.requestPermissions();
-  //   }
-  //
-  //   let url ='';
-  //
-  //   if (Capacitor.isNativePlatform()) {
-  //     url = await this.takePhotoNative();
-  //   } else {
-  //     url = await this.takePhotoPWA();
-  //   }
-  //   //deze url zou dan de image property moeten opvullen
-  //   return url;
-  // }
-
-
-  // private async takePhotoPWA(): Promise<string> {
-  //   const image = await Camera.getPhoto({
-  //     quality: 90,
-  //     resultType: CameraResultType.Base64,
-  //     source: CameraSource.Camera
-  //   });
-  //
-  //   /*//ik vermoed dat ik de image pas moet opslaan als ik deze wil opslaan in mijn supabase,
-  //    dus bij de (toekomstige) methodes createCard en updateCard*/
-  //
-  //   // // Save the image to the filesystem and save the uri so that the image can be retrieved later.
-  //   // const uri = await this.saveImageToFileSystem(image);
-  //   // this.photoURIs.push(uri);
-  //   // image.path = uri;
-  //
-  //   image.dataUrl = `data:image/${image.format};base64,${image.base64String}`;
-  //   //ik geloof dat ik een string moet teruggeven om deze op te slaan als de property 'image' bij het maken of updaten van een kaart
-  //   return image.dataUrl;
-  // }
-
-
-
-  // private havePhotosPermission(): boolean {
-  //   return this.permissionGranted.photos === 'granted';
-  // }
-  //
-  // private haveCameraPermission(): boolean {
-  //   return this.permissionGranted.camera === 'granted';
-  // }
-  //
-  // private determinePhotoSource(): CameraSource {
-  //   if (this.havePhotosPermission() && this.haveCameraPermission()) {
-  //     return CameraSource.Prompt;
-  //   } else {
-  //     return this.havePhotosPermission() ? CameraSource.Photos : CameraSource.Camera;
-  //   }
-  // }
-  //
-  // private async requestPermissions(): Promise<void> {
-  //   try {
-  //     this.permissionGranted = await Camera.requestPermissions({permissions: ['photos', 'camera']});
-  //   } catch (error) {
-  //     console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
-  //   }
-  // }
-
 }

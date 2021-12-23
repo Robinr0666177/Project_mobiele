@@ -1,7 +1,9 @@
 <ion-item>
   <ion-label (click)="router.navigate(['/sets', 'set', set.id], {relativeTo: activatedRoute})">
-
     {{set.title}}
+    <br/>
+
+    <ion-label color="fab" >{{set.release_year}}</ion-label>
   </ion-label>
 
 </ion-item>

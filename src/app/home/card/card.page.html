@@ -33,15 +33,15 @@
 
   <ion-item class='ion-margin-top'>
     <ion-label>Kaarttype</ion-label>
-    <ion-select interface='popover' >
-      <ion-select-option *ngFor='let type of types' [value]='id' ]>{{type.name}}</ion-select-option>
+    <ion-select [(ngModel)]="typeId">
+      <ion-select-option *ngFor='let type of types' [value]='type.id'>{{type.name}}</ion-select-option>
     </ion-select>
   </ion-item>
 
   <ion-item class='ion-margin-top'>
     <ion-label>Set</ion-label>
-    <ion-select interface='popover'>
-      <ion-select-option value="">Selecteer een set</ion-select-option>
+    <ion-select [(ngModel)]="setId">
+      <ion-select-option *ngFor='let set of sets' [value]='set.id'>{{set.title}}</ion-select-option>
     </ion-select>
   </ion-item>
 

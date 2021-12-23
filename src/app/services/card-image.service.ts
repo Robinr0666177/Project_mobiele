@@ -20,21 +20,21 @@ export class CardImageService {
     if (!this.havePhotosPermission()) {
       await this.requestPermissions();
     }
-
     return await Camera.getPhoto({
       resultType: CameraResultType.Base64,
-      source: CameraSource.Photos
+      source: CameraSource.Photos,
     });
   }
 
   //deze methode oproepen bij create en update card
   async uploadPicture(photo: Photo, cardNumber: string) {
-    const fileName = `${cardNumber.replace(' ','')}`  + photo.format;
+    const fileName = `${cardNumber.replace(' ','')}.`  + photo.format;
     const { data, error } = await this.supabase
       .storage
       .from('card-image')
       .upload(`${fileName}`, decode(photo.base64String), {
-        contentType: 'image/png'
+        contentType: 'image/png',
+        upsert: true
       });
     return fileName;
   }

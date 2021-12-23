@@ -5,6 +5,7 @@ import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@
 import {ISet} from '../../datatypes/ISet';
 import {ICard} from '../../datatypes/ICard';
 import {CardImageService} from './card-image.service';
+import {Itype} from '../../datatypes/Itype';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,7 @@ export class CardService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
-  async getCards(){
+  async getCards(): Promise<ICard[]>{
     const {data, error} = await this.supabase
       .from('card')
       .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image');
@@ -36,14 +37,16 @@ export class CardService {
     return data;
   }
 
-  async getTypes(){
+  //type meegeven
+  async getTypes(): Promise<Itype[]> {
     const {data, error} = await this.supabase
       .from('type')
       .select('id,name');
     return data;
   }
 
-  async getSets(){
+  //type meegeven
+  async getSets(): Promise<ISet[]> {
     const {data, error} = await this.supabase
       .from('set')
       .select('id,title, language, release_year');
@@ -62,7 +65,8 @@ export class CardService {
   }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  async createCard(name, card_number ,type_id ,set_id ,description ,condition ,value ,amount, image){
+  async createCard(name: string, card_number: string ,type_id: number ,set_id: number ,
+                   description: string ,condition: string ,value: number ,amount: number, image: string){
     const newCard: ICard = {
         name,
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -72,7 +76,7 @@ export class CardService {
       // eslint-disable-next-line @typescript-eslint/naming-convention
         set_id,
         description,
-        cardState: condition,
+        condition,
         value,
         amount,
         image
