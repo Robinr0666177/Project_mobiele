@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import {CardService} from '../../services/card.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ICard} from '../../../datatypes/ICard';
 
 @Component({
   selector: 'app-card-item',
@@ -7,7 +10,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CardItemComponent implements OnInit {
 
-  constructor() { }
+  @Input() card: ICard;
+
+  constructor(public cardService: CardService, public router: Router, public activatedRoute: ActivatedRoute) { }
 
   ngOnInit() {}
 

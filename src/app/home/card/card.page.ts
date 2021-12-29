@@ -68,12 +68,9 @@ export class CardPage implements OnInit {
       console.log(errorMessage);
       if(errorMessage.length === 0){
         if(this.photo){
-          await this.uploadPhoto();
+          await this.uploadPhoto(true);
           console.log('foto is niet null');
-        }else {
-          console.log('geen foto opgegeven');
         }
-        console.log(this.typeId);
         const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
                                                        this.description,this.condition,this.value,
                                                        this.amount,this.image);
@@ -93,8 +90,9 @@ export class CardPage implements OnInit {
     this.photo = await this.cardImageservice.takePicture();
   }
 
-  async uploadPhoto() {
-    const filename = await this.cardImageservice.uploadPicture(this.photo, this.cardNumber);
+  async uploadPhoto(newCard: boolean) {
+    const oldFileName = newCard? null: this.image;
+    const filename = await this.cardImageservice.uploadPicture(this.photo,this.id, this.cardNumber, oldFileName, true);
     this.image = this.cardImageservice.getPublicURL(filename);
   }
 
@@ -115,17 +113,17 @@ export class CardPage implements OnInit {
     if(this.cardNumber === null){
       errorMessage += 'De kaartcode dient ingevuld te zijn.\n';
     }
-    if(this.typeId.toString().match(/^[1-9][0-9]*$/) === null){
+    if(this.typeId === undefined || this.typeId.toString().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'De type van de kaart dient geselecteerd te zijn. \n';
     }
     if(this.setId !== null && this.setId.toString().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'Ongeldige set geselecteerd \n';
     }
-    if(this.value !== null && this.value.toString().match(/^[1-9][0-9]*$/) === null){
+    if(this.value.toString().trim().replace(' ',null) !== '' && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'Waarde dient numeriek te zijn \n';
     }
-    if(this.amount !== null && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
-      errorMessage += 'Waarde dient numeriek te zijn \n';
+    if(this.amount.toString().trim().replace(' ',null) !== '' && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
+      errorMessage += 'Het aantal dient numeriek te zijn \n';
     }
 
     return errorMessage;

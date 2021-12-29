@@ -18,7 +18,9 @@
   <div id="container" class="ion-text-center">
     <ion-button color='fab' style="font-size: 0.5em" (click)="takePhoto()">Selecteer kaartafbeelding</ion-button>
     <br/>
-    <img *ngIf="photo"  [src]="getDataUrl()" height="250">
+    <span>
+      <img *ngIf="photo"  [src]="getDataUrl()">
+    </span>
   </div>
 
   <ion-item lines='full' class='ion-margin-top'>

@@ -26,9 +26,25 @@ export class CardImageService {
     });
   }
 
+
+
   //deze methode oproepen bij create en update card
-  async uploadPicture(photo: Photo, cardNumber: string) {
-    const fileName = `${cardNumber.replace(' ','')}.`  + photo.format;
+  async uploadPicture(photo: Photo, id: number, cardNumber: string, oldFileName: string, newfile: boolean) {
+    let fileName = `${cardNumber.replace(' ','')}-${id}.`  + photo.format;
+    if(newfile){
+      await this.uploadPictureToBucket(photo, fileName);
+    }else{
+      if(oldFileName === fileName){
+        fileName = oldFileName;
+      }else{
+        await this.deletePicture(oldFileName);
+        await this.uploadPictureToBucket(photo, fileName);
+      }
+    }
+    return fileName;
+  }
+
+  async uploadPictureToBucket(photo: Photo, fileName: string){
     const { data, error } = await this.supabase
       .storage
       .from('card-image')
@@ -36,7 +52,15 @@ export class CardImageService {
         contentType: 'image/png',
         upsert: true
       });
-    return fileName;
+    console.log(error);
+  }
+
+  async deletePicture(fileName: string){
+    const { data, error } = await this.supabase
+      .storage
+      .from('card-image')
+      .remove([`${fileName}`]);
+    console.log(error);
   }
 
   getPublicURL(filename) {

@@ -28,4 +28,9 @@
     </ion-fab-button>
   </ion-fab>
 
+  <app-card-item
+    *ngFor='let c of cards | async'
+    [card]="c" >
+  </app-card-item>
+
 </ion-content>
