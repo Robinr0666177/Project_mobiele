@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {SetService} from '../../services/set.service';
 import {NavController, ToastController} from '@ionic/angular';
 import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@capacitor/camera';
 import {Capacitor} from '@capacitor/core';
@@ -19,10 +18,9 @@ export class CardPage implements OnInit {
   name = '';
   cardNumber = null;
   typeId: number;
-  //typeId: null;
   setId? = null;
   description? = '';
-  condition? ='';
+  condition ='';
   value? = null;
   amount? = null;
   image? : string;
@@ -44,6 +42,37 @@ export class CardPage implements OnInit {
   async ngOnInit() {
     this.types = await this.supabase.getTypes();
     this.sets = await this.supabase.getSets();
+    this.setData();
+  }
+
+  //setdata
+  async setData(): Promise<void>{
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
+
+    if(id === null){
+      return;
+    }
+    this.id = parseInt(id, 10);
+    const card = await this.supabase.getCardById(this.id);
+
+    this.name = card.name;
+    this.cardNumber = card.card_number;
+    this.typeId = card.type_id;
+    this.setId = card.set_id;
+    this.description = card.description;
+    this.condition = card.condition;
+    this.value = card.value;
+    this.amount = card.amount;
+    this.image = card.image;
+  }
+
+  //toggle
+  toggleCreateAndUpdate(): void {
+    if(this.id === null) {
+      this.createCard();
+    } else {
+      this.updateCard();
+    }
   }
 
   //databaseoperations
@@ -57,7 +86,36 @@ export class CardPage implements OnInit {
   }
 
   async updateCard(){
-
+      let errorMessage = '';
+      try {
+          errorMessage = this.validateFields();
+          console.log(errorMessage);
+          if(errorMessage.length === 0){
+            if(this.photo){
+              await this.uploadPhoto(false);
+            }
+            await this.supabase.updateCard({
+              id: this.id,
+              name: this.name,
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              card_number: this.cardNumber,
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              type_id: this.typeId,
+              // eslint-disable-next-line @typescript-eslint/naming-convention
+              set_id: this.setId,
+              description: this.description,
+              condition: this.condition,
+              value: this.value,
+              amount: this.amount,
+              image: this.image,
+            });
+            this.navController.back();
+          }else{
+            await this.presentToast(errorMessage);
+          }
+      }catch (error){
+        console.log(error);
+      }
   }
 
   async createCard()
@@ -92,7 +150,8 @@ export class CardPage implements OnInit {
 
   async uploadPhoto(newCard: boolean) {
     const oldFileName = newCard? null: this.image;
-    const filename = await this.cardImageservice.uploadPicture(this.photo,this.id, this.cardNumber, oldFileName, true);
+    console.log(oldFileName);
+    const filename = await this.cardImageservice.uploadPicture(this.photo,this.condition, this.cardNumber, oldFileName, true);
     this.image = this.cardImageservice.getPublicURL(filename);
   }
 
@@ -119,13 +178,19 @@ export class CardPage implements OnInit {
     if(this.setId !== null && this.setId.toString().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'Ongeldige set geselecteerd \n';
     }
-    if(this.value.toString().trim().replace(' ',null) !== '' && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null){
-      errorMessage += 'Waarde dient numeriek te zijn \n';
+    if(this.value !== null){
+      if( this.value.toString().trim().replace(' ',null) !== '' && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null){
+        errorMessage += 'Waarde dient numeriek te zijn \n';
+      }
     }
-    if(this.amount.toString().trim().replace(' ',null) !== '' && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
-      errorMessage += 'Het aantal dient numeriek te zijn \n';
+    if(this.amount !== null){
+      if(this.amount.toString().trim().replace(' ',null) !== '' && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
+        errorMessage += 'Het aantal dient numeriek te zijn \n';
+      }
     }
-
+    if(this.condition.length === 0){
+      errorMessage += 'De staat van de kaart dient ingevuld te zijn.\n';
+    }
     return errorMessage;
   }
 

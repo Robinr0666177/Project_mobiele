@@ -78,7 +78,6 @@ export class SetPage implements OnInit {
     try {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
-        //kan geen const {error} zetten
           await this.supabase.updateSet({
           id: this.id,
           title: this.title,

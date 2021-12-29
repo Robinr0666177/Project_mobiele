@@ -29,14 +29,15 @@ export class CardImageService {
 
 
   //deze methode oproepen bij create en update card
-  async uploadPicture(photo: Photo, id: number, cardNumber: string, oldFileName: string, newfile: boolean) {
-    let fileName = `${cardNumber.replace(' ','')}-${id}.`  + photo.format;
+  async uploadPicture(photo: Photo, condition: string, cardNumber: string, oldFileName: string, newfile: boolean) {
+    const fileName = `${cardNumber.replace(' ','')}_staat=${condition.replace(/\s|&|,|_|\/|\*|\?|;|:|=|\+|$/g, '')}.`+ photo.format;
     if(newfile){
       await this.uploadPictureToBucket(photo, fileName);
     }else{
       if(oldFileName === fileName){
-        fileName = oldFileName;
+        await this.uploadPictureToBucket(photo, fileName);
       }else{
+        //als er aan de gegevens iets wordt veranderd, dan heeft het geen zin om de oude afbeelding te laten staan
         await this.deletePicture(oldFileName);
         await this.uploadPictureToBucket(photo, fileName);
       }

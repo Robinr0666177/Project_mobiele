@@ -1,6 +1,7 @@
-<ion-header>
+<ion-header [translucent]='true'>
   <ion-toolbar>
-    <ion-title>card</ion-title>
+    <ion-title *ngIf='id === null'>Nieuwe kaart</ion-title>
+    <ion-title *ngIf='id !== null'>Bewerk kaart</ion-title>
 
     <ion-buttons slot='start'>
 
@@ -57,6 +58,12 @@
     <ion-input placeholder='Aantal' type='text'
                [(ngModel)]="amount"></ion-input>
   </ion-item>
+
+  <ion-item lines='full' class='ion-margin-top'>
+    <ion-input placeholder='Staat' type='text'
+               [(ngModel)]="condition"></ion-input>
+  </ion-item>
+
   <ion-item class='ion-margin-top'>
     <ion-textarea placeholder='Beschrijving' type='text'
                   [(ngModel)]="description"></ion-textarea>
@@ -64,7 +71,7 @@
 
   <ion-fab *ngIf='buttonIsVisible' [vertical]='verticalButtonPosition'  vertical='bottom' horizontal='end' slot='fixed'>
     <ion-fab-button [disabled]="(!name || name.length === 0)"
-                    color='fab' (click)='createCard()' >
+                    color='fab' (click)='toggleCreateAndUpdate()' >
       <ion-icon name='checkmark-circle' ></ion-icon>
     </ion-fab-button>
   </ion-fab>

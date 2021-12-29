@@ -30,7 +30,7 @@ export class CardService {
 
   async getCardById(id: number){
     const {data, error} = await this.supabase
-      .from<ISet>('card')
+      .from<ICard>('card')
       .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image')
       .eq('id' ,id)
       .single();

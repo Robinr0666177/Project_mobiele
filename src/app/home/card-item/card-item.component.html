@@ -1,9 +1,9 @@
 <ion-item>
-  <ion-label>
+  <ion-label (click)="router.navigate(['/home', 'card', card.id], {relativeTo: activatedRoute})">
     {{card.name}}
     <br/>
 
-    <ion-label color="fab" >{{card.card_number}}</ion-label>
+    <ion-label color="fab" style="font-size: small" >kaartnummer: {{card.card_number}}</ion-label>
   </ion-label>
 
 </ion-item>

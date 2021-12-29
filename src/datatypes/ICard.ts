@@ -8,8 +8,9 @@ export interface ICard {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   set_id?: number;
   description?: string;
-  condition?: string;
+  condition: string;
   value?: number;
   amount?: number;
   image?: string;
+
 }
