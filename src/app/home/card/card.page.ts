@@ -85,6 +85,7 @@ export class CardPage implements OnInit {
     setTimeout(() => this.buttonIsVisible = true, 2000);
   }
 
+
   async updateCard(){
     console.log('update wordt uitgevoerd')
       let errorMessage = '';
@@ -154,7 +155,7 @@ export class CardPage implements OnInit {
   async uploadPhoto(newCard: boolean) {
     const oldFileName = newCard? null: this.image;
     console.log(oldFileName);
-    const filename = await this.cardImageservice.uploadPicture(this.photo,this.condition, this.cardNumber, oldFileName, true);
+    const filename = await this.cardImageservice.uploadPicture(this.photo,this.condition, this.cardNumber, oldFileName, newCard);
     this.image = this.cardImageservice.getPublicURL(filename);
   }
 
