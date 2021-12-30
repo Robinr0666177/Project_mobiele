@@ -31,7 +31,6 @@
     "@supabase/supabase-js": "^1.28.5",
     "rxjs": "~6.6.0",
     "tslib": "^2.2.0",
-    "webstorm": "^1.0.0",
     "zone.js": "~0.11.4"
   },
   "devDependencies": {
