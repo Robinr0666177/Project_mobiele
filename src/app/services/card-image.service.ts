@@ -32,17 +32,13 @@ export class CardImageService {
   async uploadPicture(photo: Photo, condition: string, cardNumber: string, oldFileName: string, newfile: boolean) {
     const fileName = `${cardNumber.replace(' ','')}_staat=${condition.replace(/\s|&|,|_|\/|\*|\?|;|:|=|\+|$/g, '')}.`+ photo.format;
     if(newfile === true){
-      //zelfs bij de update komt de methode hier terecht, terwijl daar de boolean van newfile op false wordt gezet
-      console.log('foto: ' +  photo);
+      console.log('nieuw');
       await this.uploadPictureToBucket(photo, fileName);
     }else{
-      //hier wil ik een check doen dat als de gegevens niet veranderen, waarschijnlijk lukt dit nooit met de fileNames te controleren
       if(oldFileName === fileName){
         console.log('gelijk');
         await this.uploadPictureToBucket(photo, fileName);
       }else{
-        //als er aan de gegevens iets wordt veranderd, dan heeft het geen zin om de oude afbeelding te laten staan
-        //dus wil ik de oude afbeelding verwijderen
         console.log('niet gelijk');
         await this.deletePicture(oldFileName, photo);
         await this.uploadPictureToBucket(photo, fileName);
@@ -64,13 +60,14 @@ export class CardImageService {
     console.log(error);
   }
 
-  //ik weet niet hoe ik een afbeelding moet verwijderen
   async deletePicture(fileName: string,photo: Photo ){
+    fileName = fileName.replace('https://lcipsdoqgsvpdeychwmr.supabase.co/storage/v1/object/public/card-image/','');
+    console.log('image to delete ' + fileName);
     const { data, error } = await this.supabase
       .storage
       .from('card-image')
-      .remove([`${decode(photo.base64String)}`]);
-    console.log(error);
+      .remove([`${fileName}`]);
+    console.log('delete image:' +  error);
   }
 
   getPublicURL(filename) {

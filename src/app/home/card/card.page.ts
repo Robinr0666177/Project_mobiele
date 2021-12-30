@@ -35,6 +35,8 @@ export class CardPage implements OnInit {
   types = [];
   sets = [];
 
+  //test
+
   constructor(private  readonly supabase: CardService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute
               ,public cardImageservice: CardImageService) { }
@@ -87,7 +89,7 @@ export class CardPage implements OnInit {
 
 
   async updateCard(){
-    console.log('update wordt uitgevoerd')
+    console.log('update wordt uitgevoerd');
       let errorMessage = '';
       try {
           errorMessage = this.validateFields();
@@ -154,7 +156,6 @@ export class CardPage implements OnInit {
 
   async uploadPhoto(newCard: boolean) {
     const oldFileName = newCard? null: this.image;
-    console.log(oldFileName);
     const filename = await this.cardImageservice.uploadPicture(this.photo,this.condition, this.cardNumber, oldFileName, newCard);
     this.image = this.cardImageservice.getPublicURL(filename);
   }
