@@ -31,17 +31,18 @@ export class CardImageService {
   //deze methode oproepen bij create en update card
   async uploadPicture(photo: Photo, condition: string, cardNumber: string, oldFileName: string, newfile: boolean) {
     const fileName = `${cardNumber.replace(' ','')}_staat=${condition.replace(/\s|&|,|_|\/|\*|\?|;|:|=|\+|$/g, '')}.`+ photo.format;
-    //zelf bij de update komt de methode hier terecht, terwijl daar de boolean van newfile op false wordt gezet
     if(newfile === true){
+      //zelfs bij de update komt de methode hier terecht, terwijl daar de boolean van newfile op false wordt gezet
       console.log('foto: ' +  photo);
       await this.uploadPictureToBucket(photo, fileName);
     }else{
-      //hier wil ik een check doen dat als de gegevens niet veranderen
+      //hier wil ik een check doen dat als de gegevens niet veranderen, waarschijnlijk lukt dit nooit met de fileNames te controleren
       if(oldFileName === fileName){
         console.log('gelijk');
         await this.uploadPictureToBucket(photo, fileName);
       }else{
         //als er aan de gegevens iets wordt veranderd, dan heeft het geen zin om de oude afbeelding te laten staan
+        //dus wil ik de oude afbeelding verwijderen
         console.log('niet gelijk');
         await this.deletePicture(oldFileName, photo);
         await this.uploadPictureToBucket(photo, fileName);

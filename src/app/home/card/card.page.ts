@@ -92,6 +92,7 @@ export class CardPage implements OnInit {
           errorMessage = this.validateFields();
           console.log(errorMessage);
           if(errorMessage.length === 0){
+            //hier probeer ik de foto up te daten
             if(this.photo){
               await this.uploadPhoto(false);
             }
