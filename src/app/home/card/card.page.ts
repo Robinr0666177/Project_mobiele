@@ -86,6 +86,7 @@ export class CardPage implements OnInit {
   }
 
   async updateCard(){
+    console.log('update wordt uitgevoerd')
       let errorMessage = '';
       try {
           errorMessage = this.validateFields();
@@ -120,6 +121,7 @@ export class CardPage implements OnInit {
 
   async createCard()
   {
+    console.log('nieuwe kaart wordt gemaakt');
     let errorMessage = '';
     try {
       errorMessage = this.validateFields();

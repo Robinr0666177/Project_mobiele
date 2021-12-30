@@ -86,6 +86,7 @@ export class CardService {
     });
   }
 
+
   async deleteCard(id){
     const {error} = await this.supabase
       .from('card')
