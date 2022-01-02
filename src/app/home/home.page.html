@@ -14,7 +14,8 @@
 <ion-content [fullscreen]='true'
              [scrollEvents]='true'
              (ionScrollStart)="logScrollStart()"
-             (ionScrollEnd)="logScrollEnd()">
+             (ionScrollEnd)="logScrollEnd()"
+             (click)="logClicked()">
   <ion-header collapse='condense'>
     <ion-toolbar>
       <ion-title size='large'>Verzamelkaarten</ion-title>

@@ -17,6 +17,9 @@ export class SetPage implements OnInit {
   language = '';
   releaseYear = null;
 
+  addUpdateButtonIsClickable = true;
+  deleteButtonIsClickable = true;
+
   set: ISet | undefined;
   constructor(private  readonly supabase: SetService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute) { }
@@ -44,6 +47,7 @@ export class SetPage implements OnInit {
   }
 
   toggleCreateAndUpdate(): void {
+    this.addUpdateButtonIsClickable = false;
     if(this.id === null) {
       this.createSet();
     } else {
@@ -52,6 +56,7 @@ export class SetPage implements OnInit {
   }
 
   async deleteSet(){
+    this.deleteButtonIsClickable = false;
     const error = await this.supabase.deleteSet(this.id);
     console.log(error);
     this.navController.back();
@@ -63,9 +68,11 @@ export class SetPage implements OnInit {
     try {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
+        this.addUpdateButtonIsClickable = false;
         const {error} = await this.supabase.createSet(this.title, this.language, this.releaseYear);
         this.navController.back();
       }else{
+        this.addUpdateButtonIsClickable = true;
         await this.presentToast(errorMessage);
       }
     } catch (error) {
@@ -78,6 +85,7 @@ export class SetPage implements OnInit {
     try {
       errorMessage = this.validateFields();
       if(errorMessage.length === 0){
+        this.addUpdateButtonIsClickable = false;
           await this.supabase.updateSet({
           id: this.id,
           title: this.title,
@@ -87,6 +95,7 @@ export class SetPage implements OnInit {
         });
         this.navController.back();
       }else {
+        this.addUpdateButtonIsClickable = true;
         await this.presentToast(errorMessage);
       }
     }catch (error){

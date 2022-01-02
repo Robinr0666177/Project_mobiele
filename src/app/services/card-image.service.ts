@@ -5,10 +5,13 @@ import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@
 import {Capacitor} from '@capacitor/core';
 import {decode} from 'base64-arraybuffer';
 
+
 @Injectable({
   providedIn: 'root'
 })
 export class CardImageService {
+
+  currentDateTime = '';
 
   private supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
 
@@ -26,23 +29,33 @@ export class CardImageService {
     });
   }
 
-
+  async getCurrentDate(){
+    const y= new Date().getFullYear().toString();
+    const m = (new Date().getMonth() + 1).toString();
+    const d =new Date().getUTCDate().toString();
+    const h = new Date().getHours().toString();
+    const mi = new Date().getMinutes().toString();
+    const s = new Date().getSeconds().toString();
+    return d + '-' + m + '-' + y + '-tijd-' + h + 'u-' + mi + 'm-' + s + 's';
+  }
 
   //deze methode oproepen bij create en update card
   async uploadPicture(photo: Photo, condition: string, cardNumber: string, oldFileName: string, newfile: boolean) {
-    const fileName = `${cardNumber.replace(' ','')}_staat=${condition.replace(/\s|&|,|_|\/|\*|\?|;|:|=|\+|$/g, '')}.`+ photo.format;
+    await this.getCurrentDate();
+    this.currentDateTime = await this.getCurrentDate();
+
+    const fileName = cardNumber.replace(' ','') + '_staat='
+                    + condition.replace(/\s|&|,|_|\/|\*|\?|;|:|=|\+|$/g, '') + '_datum='
+                    + this.currentDateTime + '.' + photo.format;
+    console.log(fileName);
     if(newfile === true){
       console.log('nieuw');
       await this.uploadPictureToBucket(photo, fileName);
     }else{
-      if(oldFileName === fileName){
-        console.log('gelijk');
-        await this.uploadPictureToBucket(photo, fileName);
-      }else{
-        console.log('niet gelijk');
+      if(oldFileName !== null){
         await this.deletePicture(oldFileName, photo);
-        await this.uploadPictureToBucket(photo, fileName);
       }
+      await this.uploadPictureToBucket(photo, fileName);
     }
     return fileName;
   }
@@ -90,5 +103,4 @@ export class CardImageService {
       console.error(`Permissions aren't available on this device: ${Capacitor.getPlatform()} platform.`);
     }
   }
-
 }

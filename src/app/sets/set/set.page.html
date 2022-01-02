@@ -30,7 +30,7 @@
   </ion-item>
 
   <ion-fab  vertical='bottom' horizontal='end' slot='fixed'>
-    <ion-fab-button [disabled]="(!title || title.length === 0)"
+    <ion-fab-button [disabled]="(!title || title.length === 0 || !addUpdateButtonIsClickable)"
                     color='fab' (click)='toggleCreateAndUpdate()' >
       <ion-icon name='checkmark-circle' ></ion-icon>
     </ion-fab-button>
@@ -39,12 +39,12 @@
   <ion-fab vertical='bottom' horizontal='start' slot='fixed'>
     <div *ngIf='id !== null'>
       <ion-fab-button color='deletefab'
-                      (click)="deleteSet()">
+                      [disabled]="(!deleteButtonIsClickable)"  (click)="deleteSet()">
         <ion-icon name="close-circle-outline"
         ></ion-icon>
       </ion-fab-button>
     </div>
-
   </ion-fab>
+
 </ion-content>
 

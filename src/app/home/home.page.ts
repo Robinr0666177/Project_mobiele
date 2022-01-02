@@ -9,11 +9,12 @@ import {CardService} from '../services/card.service';
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   verticalButtonPosition = 'bottom';
   buttonIsVisible = true;
   cards = this.supabase.getCards();
+  buttonIsClickable = true;
 
   constructor(public supabase: CardService) {}
 
@@ -27,6 +28,10 @@ export class HomePage {
 
   logScrollEnd(): void {
     setTimeout(() => this.buttonIsVisible = true, 1500);
+  }
+
+  logClicked(): void {
+    this.buttonIsClickable = false;
   }
 
   ionViewWillEnter(): void {

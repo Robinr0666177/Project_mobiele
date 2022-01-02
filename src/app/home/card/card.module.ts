@@ -8,6 +8,7 @@ import { CardPageRoutingModule } from './card-routing.module';
 
 import { CardPage } from './card.page';
 
+
 @NgModule({
   imports: [
     CommonModule,

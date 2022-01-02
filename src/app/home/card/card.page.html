@@ -1,4 +1,4 @@
-<ion-header [translucent]='true'>
+<ion-header [translucent]='true' style="z-index: 0;">
   <ion-toolbar>
     <ion-title *ngIf='id === null'>Nieuwe kaart</ion-title>
     <ion-title *ngIf='id !== null'>Bewerk kaart</ion-title>
@@ -16,15 +16,31 @@
              (ionScrollStart)="logScrollStart()"
              (ionScrollEnd)="logScrollEnd()">
 
-  <div id="container" class="ion-text-center">
-    <ion-button color='fab' style="font-size: 0.5em" (click)="takePhoto()">Selecteer kaartafbeelding</ion-button>
-    <br/>
-    <span>
+  <div>
+    <div id="container" class="ion-text-center">
+      <ion-button color='fab' style="font-size: 0.5em" (click)="takePhoto()">Selecteer kaartafbeelding</ion-button>
+      <br/>
+      <span>
       <img *ngIf="photo"  [src]="getDataUrl()">
+        <ion-button (click)="zoomInOrOut(-0.1)">
+          <ion-icon  name="remove">
+         </ion-icon>
+      </ion-button>
+      <ion-button (click)="zoomInOrOut(0.1)">
+        <ion-icon  name="add">
+        </ion-icon>
+      </ion-button>
     </span>
+    </div>
+
+    <div class="ion-text-center">
+      <img *ngIf="!photo" [src]="image">
+
+      <img>
+    </div>
+
   </div>
 
-  <ion-label>{{image}}</ion-label>
 
   <ion-item lines='full' class='ion-margin-top'>
     <ion-input placeholder='Benoeming' type='text'
@@ -71,11 +87,21 @@
                   [(ngModel)]="description"></ion-textarea>
   </ion-item>
 
-  <ion-fab *ngIf='buttonIsVisible' [vertical]='verticalButtonPosition'  vertical='bottom' horizontal='end' slot='fixed'>
-    <ion-fab-button [disabled]="(!name || name.length === 0)"
+  <ion-fab *ngIf='addButtonIsVisible' [vertical]='verticalButtonPosition' vertical='bottom' horizontal='end' slot='fixed'>
+    <ion-fab-button [disabled]="(!name || name.length === 0 || !addUpdateButtonIsClickable)"
                     color='fab' (click)='toggleCreateAndUpdate()' >
       <ion-icon name='checkmark-circle' ></ion-icon>
     </ion-fab-button>
+  </ion-fab>
+
+  <ion-fab *ngIf='deleteButtonVisible' [vertical]='verticalButtonPosition' vertical='bottom' horizontal='start' slot='fixed'>
+    <div *ngIf='id !== null'>
+      <ion-fab-button color='deletefab'
+                      [disabled]="(!deleteButtonIsClickable)"  (click)="deleteCard()">
+        <ion-icon name="close-circle-outline"
+        ></ion-icon>
+      </ion-fab-button>
+    </div>
   </ion-fab>
 
 </ion-content>

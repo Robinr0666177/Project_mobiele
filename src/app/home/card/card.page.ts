@@ -30,11 +30,13 @@ export class CardPage implements OnInit {
   card: ICard | undefined;
 
   verticalButtonPosition = 'bottom';
-  buttonIsVisible = true;
+  addButtonIsVisible = true;
+  deleteButtonVisible = true;
+  addUpdateButtonIsClickable = true;
+  deleteButtonIsClickable = true;
 
   types = [];
   sets = [];
-
   //test
 
   constructor(private  readonly supabase: CardService, public toastController: ToastController,
@@ -45,6 +47,18 @@ export class CardPage implements OnInit {
     this.types = await this.supabase.getTypes();
     this.sets = await this.supabase.getSets();
     this.setData();
+  }
+
+  //Text-Zoom plugin
+
+  zoomInOrOut(val){
+    TextZoom.get().then((val1: GetResult) => {
+      const zoomValue = val1.value;
+      const options: SetOptions = {
+        value: zoomValue + parseFloat(val)
+      };
+      TextZoom.set(options);
+    });
   }
 
   //setdata
@@ -70,6 +84,7 @@ export class CardPage implements OnInit {
 
   //toggle
   toggleCreateAndUpdate(): void {
+    this.addUpdateButtonIsClickable = false;
     if(this.id === null) {
       this.createCard();
     } else {
@@ -80,22 +95,23 @@ export class CardPage implements OnInit {
   //databaseoperations
 
   logScrollStart(): void {
-    this.buttonIsVisible = false;
+    this.addButtonIsVisible = false;
+    this.deleteButtonVisible = false;
   }
 
   logScrollEnd(): void {
-    setTimeout(() => this.buttonIsVisible = true, 2000);
+    setTimeout(() => this.addButtonIsVisible = true, 2000);
+    setTimeout(() => this.deleteButtonVisible = true, 2000);
   }
 
 
   async updateCard(){
     console.log('update wordt uitgevoerd');
-      let errorMessage = '';
       try {
-          errorMessage = this.validateFields();
+        const errorMessage = this.validateFields();
           console.log(errorMessage);
           if(errorMessage.length === 0){
-            //hier probeer ik de foto up te daten
+            this.addUpdateButtonIsClickable = false;
             if(this.photo){
               await this.uploadPhoto(false);
             }
@@ -116,6 +132,7 @@ export class CardPage implements OnInit {
             });
             this.navController.back();
           }else{
+            this.addUpdateButtonIsClickable = true;
             await this.presentToast(errorMessage);
           }
       }catch (error){
@@ -131,9 +148,13 @@ export class CardPage implements OnInit {
       errorMessage = this.validateFields();
       console.log(errorMessage);
       if(errorMessage.length === 0){
+        this.addUpdateButtonIsClickable = false;
         if(this.photo){
           await this.uploadPhoto(true);
           console.log('foto is niet null');
+        }
+        if(this.value.toString().trim().match(/^[1-9][0-9]*$/) === null ){
+          this.value = null;
         }
         const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
                                                        this.description,this.condition,this.value,
@@ -141,11 +162,19 @@ export class CardPage implements OnInit {
         console.log(error);
         this.navController.back();
       }else{
+        this.addUpdateButtonIsClickable = true;
         await this.presentToast(errorMessage);
       }
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async deleteCard(){
+    this.deleteButtonIsClickable = false;
+    const error = await this.supabase.deleteCard(this.id);
+    console.log(error);
+    this.navController.back();
   }
 
   //image service methods
