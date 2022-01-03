@@ -1,4 +1,4 @@
-<ion-header [translucent]='true' style="z-index: 0;">
+<ion-header [translucent]='true'>
   <ion-toolbar>
     <ion-title *ngIf='id === null'>Nieuwe kaart</ion-title>
     <ion-title *ngIf='id !== null'>Bewerk kaart</ion-title>
@@ -20,24 +20,26 @@
     <div id="container" class="ion-text-center">
       <ion-button color='fab' style="font-size: 0.5em" (click)="takePhoto()">Selecteer kaartafbeelding</ion-button>
       <br/>
-      <span>
-      <img *ngIf="photo"  [src]="getDataUrl()">
-        <ion-button (click)="zoomInOrOut(-0.1)">
-          <ion-icon  name="remove">
-         </ion-icon>
-      </ion-button>
-      <ion-button (click)="zoomInOrOut(0.1)">
-        <ion-icon  name="add">
-        </ion-icon>
-      </ion-button>
-    </span>
+      <div>
+        <br/>
+        <span>
+          <img *ngIf="photo"  [src]="getDataUrl()">
+                <!--        <ion-button (click)="zoomInOrOut(-0.1)">-->
+                <!--          <ion-icon  name="remove">-->
+                <!--         </ion-icon>-->
+                <!--      </ion-button>-->
+                <!--      <ion-button (click)="zoomInOrOut(0.1)">-->
+                <!--        <ion-icon  name="add">-->
+                <!--        </ion-icon>-->
+                <!--      </ion-button>-->
+        </span>
+
+        <span>
+          <img *ngIf="!photo" [src]="image">
+        </span>
+      </div>
     </div>
 
-    <div class="ion-text-center">
-      <img *ngIf="!photo" [src]="image">
-
-      <img>
-    </div>
 
   </div>
 

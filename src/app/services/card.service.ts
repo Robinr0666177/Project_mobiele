@@ -27,7 +27,6 @@ export class CardService {
     return data;
   }
 
-
   async getCardById(id: number){
     const {data, error} = await this.supabase
       .from<ICard>('card')
@@ -85,7 +84,6 @@ export class CardService {
       returning: 'minimal', //
     });
   }
-
 
   async deleteCard(id){
     const {error} = await this.supabase

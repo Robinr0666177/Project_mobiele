@@ -53,7 +53,7 @@ export class CardImageService {
       await this.uploadPictureToBucket(photo, fileName);
     }else{
       if(oldFileName !== null){
-        await this.deletePicture(oldFileName, photo);
+        await this.deletePicture(oldFileName);
       }
       await this.uploadPictureToBucket(photo, fileName);
     }
@@ -73,7 +73,7 @@ export class CardImageService {
     console.log(error);
   }
 
-  async deletePicture(fileName: string,photo: Photo ){
+  async deletePicture(fileName: string){
     fileName = fileName.replace('https://lcipsdoqgsvpdeychwmr.supabase.co/storage/v1/object/public/card-image/','');
     console.log('image to delete ' + fileName);
     const { data, error } = await this.supabase

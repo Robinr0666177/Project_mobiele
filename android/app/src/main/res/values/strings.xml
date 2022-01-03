@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Verzamelkaarten</string>
+    <string name="title_activity_main">Verzamelkaarten</string>
+    <string name="package_name">com.ceustermans.robin.verzamelkaarten</string>
+    <string name="custom_url_scheme">com.ceustermans.robin.verzamelkaarten</string>
+</resources>

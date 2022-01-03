@@ -5,7 +5,7 @@ import {Capacitor} from '@capacitor/core';
 import {ActivatedRoute} from '@angular/router';
 import {ICard} from '../../../datatypes/ICard';
 import {CardService} from '../../services/card.service';
-import {TextZoom,SetOptions,GetResult} from'@capacitor/text-zoom';
+// import {TextZoom,SetOptions,GetResult} from'@capacitor/text-zoom';
 import {CardImageService} from '../../services/card-image.service';
 
 @Component({
@@ -50,16 +50,16 @@ export class CardPage implements OnInit {
   }
 
   //Text-Zoom plugin
-
-  zoomInOrOut(val){
-    TextZoom.get().then((val1: GetResult) => {
-      const zoomValue = val1.value;
-      const options: SetOptions = {
-        value: zoomValue + parseFloat(val)
-      };
-      TextZoom.set(options);
-    });
-  }
+  //
+  // zoomInOrOut(val){
+  //   TextZoom.get().then((val1: GetResult) => {
+  //     const zoomValue = val1.value;
+  //     const options: SetOptions = {
+  //       value: zoomValue + parseFloat(val)
+  //     };
+  //     TextZoom.set(options);
+  //   });
+  // }
 
   //setdata
   async setData(): Promise<void>{
@@ -115,6 +115,7 @@ export class CardPage implements OnInit {
             if(this.photo){
               await this.uploadPhoto(false);
             }
+            this.checkEmptyNumberFields();
             await this.supabase.updateCard({
               id: this.id,
               name: this.name,
@@ -153,9 +154,7 @@ export class CardPage implements OnInit {
           await this.uploadPhoto(true);
           console.log('foto is niet null');
         }
-        if(this.value.toString().trim().match(/^[1-9][0-9]*$/) === null ){
-          this.value = null;
-        }
+        this.checkEmptyNumberFields();
         const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
                                                        this.description,this.condition,this.value,
                                                        this.amount,this.image);
@@ -172,6 +171,7 @@ export class CardPage implements OnInit {
 
   async deleteCard(){
     this.deleteButtonIsClickable = false;
+    await this.deletePhoto();
     const error = await this.supabase.deleteCard(this.id);
     console.log(error);
     this.navController.back();
@@ -187,6 +187,14 @@ export class CardPage implements OnInit {
     const oldFileName = newCard? null: this.image;
     const filename = await this.cardImageservice.uploadPicture(this.photo,this.condition, this.cardNumber, oldFileName, newCard);
     this.image = this.cardImageservice.getPublicURL(filename);
+  }
+
+  async deletePhoto(){
+    const oldFileName = this.image;
+    if(this.image !== null){
+      const error = await this.cardImageservice.deletePicture(oldFileName);
+      console.log(error);
+    }
   }
 
   getDataUrl() {
@@ -227,6 +235,18 @@ export class CardPage implements OnInit {
     }
     return errorMessage;
   }
+
+  //als er iets ingevuld wordt in het veld 'waarde' en dan weer leeg gemaakt wordt, dan zal er een fout optreden
+  //bij supabase, want het veld zal dan erkent worden als een lege string
+  checkEmptyNumberFields(){
+    if(this.value !== null && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null ){
+      this.value = null;
+    }
+    if(this.amount !== null && this.amount.toString().trim().match(/^[1-9][0-9]*$/) === null ){
+      this.amount = null;
+    }
+  }
+
 
   async presentToast(errorMessage) {
     const toast = await this.toastController.create({
