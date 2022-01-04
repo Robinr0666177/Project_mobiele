@@ -23,7 +23,8 @@ export class CardService {
   async getCards(): Promise<ICard[]>{
     const {data, error} = await this.supabase
       .from('card')
-      .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image');
+      .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image')
+      .order('name',{ascending: true});
     return data;
   }
 

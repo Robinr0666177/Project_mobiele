@@ -19,7 +19,8 @@ export class SetService {
   async getSets() {
     const {data, error} = await this.supabase
       .from('set')
-      .select('id,title, language, release_year');
+      .select('id,title, language, release_year')
+      .order('release_year',{ascending: true});
     return data;
   }
 
