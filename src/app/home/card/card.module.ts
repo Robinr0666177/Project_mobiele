@@ -1,12 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
 import { IonicModule } from '@ionic/angular';
-
 import { CardPageRoutingModule } from './card-routing.module';
-
 import { CardPage } from './card.page';
+import {SharedModule} from '../../shared/shared.module';
 
 
 @NgModule({
@@ -14,7 +12,8 @@ import { CardPage } from './card.page';
     CommonModule,
     FormsModule,
     IonicModule,
-    CardPageRoutingModule
+    CardPageRoutingModule,
+    SharedModule
   ],
   declarations: [CardPage]
 })

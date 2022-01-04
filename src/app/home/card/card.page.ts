@@ -1,11 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {NavController, ToastController} from '@ionic/angular';
-import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@capacitor/camera';
-import {Capacitor} from '@capacitor/core';
+import {Photo} from '@capacitor/camera';
 import {ActivatedRoute} from '@angular/router';
 import {ICard} from '../../../datatypes/ICard';
 import {CardService} from '../../services/card.service';
-// import {TextZoom,SetOptions,GetResult} from'@capacitor/text-zoom';
 import {CardImageService} from '../../services/card-image.service';
 
 @Component({
@@ -37,7 +35,6 @@ export class CardPage implements OnInit {
 
   types = [];
   sets = [];
-  //test
 
   constructor(private  readonly supabase: CardService, public toastController: ToastController,
               public navController: NavController, public activatedRoute: ActivatedRoute
@@ -49,19 +46,6 @@ export class CardPage implements OnInit {
     this.setData();
   }
 
-  //Text-Zoom plugin
-  //
-  // zoomInOrOut(val){
-  //   TextZoom.get().then((val1: GetResult) => {
-  //     const zoomValue = val1.value;
-  //     const options: SetOptions = {
-  //       value: zoomValue + parseFloat(val)
-  //     };
-  //     TextZoom.set(options);
-  //   });
-  // }
-
-  //setdata
   async setData(): Promise<void>{
     const id = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -82,7 +66,6 @@ export class CardPage implements OnInit {
     this.image = card.image;
   }
 
-  //toggle
   toggleCreateAndUpdate(): void {
     this.addUpdateButtonIsClickable = false;
     if(this.id === null) {
@@ -103,7 +86,6 @@ export class CardPage implements OnInit {
     setTimeout(() => this.addButtonIsVisible = true, 2000);
     setTimeout(() => this.deleteButtonVisible = true, 2000);
   }
-
 
   async updateCard(){
     console.log('update wordt uitgevoerd');

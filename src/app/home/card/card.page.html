@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title *ngIf='id === null'>Nieuwe kaart</ion-title>
     <ion-title *ngIf='id !== null'>Bewerk kaart</ion-title>
+    <ion-label slot='end' style="margin-right: 20px">
+      <app-network></app-network>
+    </ion-label>
 
     <ion-buttons slot='start'>
 
@@ -23,15 +26,7 @@
       <div>
         <br/>
         <span>
-          <img *ngIf="photo"  [src]="getDataUrl()">
-                <!--        <ion-button (click)="zoomInOrOut(-0.1)">-->
-                <!--          <ion-icon  name="remove">-->
-                <!--         </ion-icon>-->
-                <!--      </ion-button>-->
-                <!--      <ion-button (click)="zoomInOrOut(0.1)">-->
-                <!--        <ion-icon  name="add">-->
-                <!--        </ion-icon>-->
-                <!--      </ion-button>-->
+          <img *ngIf="photo" [src]="getDataUrl()">
         </span>
 
         <span>

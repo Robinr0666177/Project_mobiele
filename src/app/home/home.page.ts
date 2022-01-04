@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {environment} from '../../environments/environment';
-import{SupabaseClient, createClient} from '@supabase/supabase-js';
 import {CardService} from '../services/card.service';
 
 

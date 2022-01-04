@@ -2,6 +2,9 @@
   <ion-toolbar>
     <ion-title *ngIf='id === null'>Nieuwe set</ion-title>
     <ion-title *ngIf='id !== null'>Bewerk set</ion-title>
+    <ion-label slot='end' style="margin-right: 20px">
+      <app-network></app-network>
+    </ion-label>
 
     <ion-buttons slot='start'>
 
