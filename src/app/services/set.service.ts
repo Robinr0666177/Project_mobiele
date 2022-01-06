@@ -17,7 +17,7 @@ export class SetService {
   //get methode om sets op te halen
 
   async getSets() {
-    const {data, error} = await this.supabase
+    const {data} = await this.supabase
       .from('set')
       .select('id,title, language, release_year')
       .order('release_year',{ascending: true});
@@ -33,7 +33,7 @@ export class SetService {
    * @param id
    */
   async getSetById(id: number): Promise<ISet>{
-    const {data, error} = await this.supabase
+    const {data} = await this.supabase
       // Add the datatype of the returned row(s) to the from
       // method.
       .from<ISet>('set')

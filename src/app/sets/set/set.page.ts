@@ -108,9 +108,7 @@ export class SetPage implements OnInit {
       if(this.title.length === 0){
         errorMessage += 'De naam van de set dient ingediend te zijn.\n';
       }
-      if(this.releaseYear !== null){
-        //!parseInt(this.releaseYear, 10)
-        //
+      if(this.releaseYear !== null && this.releaseYear.toString().length !== 0){
         if(this.releaseYear.toString().match(/^[1-9][0-9]*$/) === null){
           errorMessage += 'het jaar dient een numerieke waarde te zijn. \n';
         }
@@ -126,11 +124,4 @@ export class SetPage implements OnInit {
     });
     await toast.present();
   }
-
-  // clickMethod() {
-  //   if(confirm('Are you sure to delete ')) {
-  //     alert('verwijderd');
-  //   }
-  // }
-
 }

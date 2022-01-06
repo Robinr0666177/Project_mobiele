@@ -5,7 +5,6 @@ import {Camera, CameraResultType, CameraSource, PermissionStatus, Photo} from '@
 import {Capacitor} from '@capacitor/core';
 import {decode} from 'base64-arraybuffer';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -63,7 +62,7 @@ export class CardImageService {
   //als alle gegevens van de kaart hezelfde blijven, dan zal de upsert ervoor zorgen dat er een update uitgevoerd wordt
   // en komt er geen extra kaart
   async uploadPictureToBucket(photo: Photo, fileName: string){
-    const { data, error } = await this.supabase
+    const { error } = await this.supabase
       .storage
       .from('card-image')
       .upload(`${fileName}`, decode(photo.base64String), {
@@ -76,7 +75,7 @@ export class CardImageService {
   async deletePicture(fileName: string){
     fileName = fileName.replace('https://lcipsdoqgsvpdeychwmr.supabase.co/storage/v1/object/public/card-image/','');
     console.log('image to delete ' + fileName);
-    const { data, error } = await this.supabase
+    const { error } = await this.supabase
       .storage
       .from('card-image')
       .remove([`${fileName}`]);
@@ -84,7 +83,7 @@ export class CardImageService {
   }
 
   getPublicURL(filename) {
-    const { publicURL, error } = this.supabase
+    const { publicURL } = this.supabase
       .storage
       .from('card-image')
       .getPublicUrl(filename);

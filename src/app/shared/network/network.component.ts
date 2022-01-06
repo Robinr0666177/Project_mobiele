@@ -17,7 +17,7 @@ export class NetworkComponent implements OnInit {
   }
 
 
-  getNetworkStatus(){
+getNetworkStatus(){
     Network.getStatus().then(
       (status: ConnectionStatus) => {
         this.status = (status.connected) ? 'verbonden' : 'offline';

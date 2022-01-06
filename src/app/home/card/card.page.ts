@@ -43,7 +43,7 @@ export class CardPage implements OnInit {
   async ngOnInit() {
     this.types = await this.supabase.getTypes();
     this.sets = await this.supabase.getSets();
-    this.setData();
+    await this.setData();
   }
 
   async setData(): Promise<void>{
@@ -98,7 +98,7 @@ export class CardPage implements OnInit {
               await this.uploadPhoto(false);
             }
             this.checkEmptyNumberFields();
-            await this.supabase.updateCard({
+            const error =  await this.supabase.updateCard({
               id: this.id,
               name: this.name,
               // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -113,7 +113,13 @@ export class CardPage implements OnInit {
               amount: this.amount,
               image: this.image,
             });
+            console.log(error);
+            if(error.status !== 201){
+              await this.presentToast('Het bewerken van de kaart is niet geslaagd,' +
+                                      ' kijk of dat je verbonden bent met het internet linksboven');
+            }
             this.navController.back();
+
           }else{
             this.addUpdateButtonIsClickable = true;
             await this.presentToast(errorMessage);
@@ -141,7 +147,12 @@ export class CardPage implements OnInit {
                                                        this.description,this.condition,this.value,
                                                        this.amount,this.image);
         console.log(error);
+        await this.navController.back();
+        if(error !== null){
+          await this.presentToast('Het aanmaken van de kaart is niet geslaagd, kijk of dat je verbonden bent met het internet linksboven');
+        }
         this.navController.back();
+
       }else{
         this.addUpdateButtonIsClickable = true;
         await this.presentToast(errorMessage);
@@ -202,14 +213,20 @@ export class CardPage implements OnInit {
     if(this.setId !== null && this.setId.toString().match(/^[1-9][0-9]*$/) === null){
       errorMessage += 'Ongeldige set geselecteerd \n';
     }
-    if(this.value !== null){
-      if( this.value.toString().trim().replace(' ',null) !== '' && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null){
-        errorMessage += 'Waarde dient numeriek te zijn \n';
+    if(this.value !== null && this.value.toString().length !== 0){
+      if (this.value <= 0){
+        errorMessage += 'De waarde mag niet kleiner dan of gelijk zijn aan 0\n';
+      }
+      else if( this.value.toString().trim().replace(' ',null) !== '' && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null){
+        errorMessage += 'De waarde dient numeriek te zijn \n';
       }
     }
-    if(this.amount !== null){
-      if(this.amount.toString().trim().replace(' ',null) !== '' && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
-        errorMessage += 'Het aantal dient numeriek te zijn \n';
+    if(this.amount !== null && this.amount.toString().length !== 0){
+      if(this.amount <= 0){
+        errorMessage += 'Het aantal mag niet kleiner of gelijk zijn aan 0\n';
+      }
+      else if(this.amount.toString().trim().replace(' ',null) !== '' && this.amount.toString().match(/^[1-9][0-9]*$/) === null){
+        errorMessage += 'Het aantal dient numeriek te zijn\n';
       }
     }
     if(this.condition.length === 0){
@@ -219,7 +236,7 @@ export class CardPage implements OnInit {
   }
 
   //als er iets ingevuld wordt in het veld 'waarde' en dan weer leeg gemaakt wordt, dan zal er een fout optreden
-  //bij supabase, want het veld zal dan erkent worden als een lege string
+  //bij supabase, want het veld zal dan gezien worden als een lege string
   checkEmptyNumberFields(){
     if(this.value !== null && this.value.toString().trim().match(/^[1-9][0-9]*$/) === null ){
       this.value = null;
@@ -229,11 +246,10 @@ export class CardPage implements OnInit {
     }
   }
 
-
   async presentToast(errorMessage) {
     const toast = await this.toastController.create({
       message: errorMessage,
-      duration: 3000
+      duration: 4000
     });
     await toast.present();
   }
