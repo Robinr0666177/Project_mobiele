@@ -79,13 +79,11 @@
                [(ngModel)]="condition"></ion-input>
   </ion-item>
 
-  <ion-item class='ion-margin-top'  >
+  <ion-item class='ion-margin-top' style="margin-bottom: 90px" >
     <ion-textarea matInput rows="10"
                   placeholder='Beschrijving' type='text'
                   [(ngModel)]="description"></ion-textarea>
   </ion-item>
-
-  <p style="margin-top: 80px"></p>
 
   <ion-fab *ngIf='addButtonIsVisible' [vertical]='verticalButtonPosition' vertical='bottom' horizontal='end' slot='fixed'>
     <ion-fab-button [disabled]="(!name || name.length === 0 || !addUpdateButtonIsClickable)"
