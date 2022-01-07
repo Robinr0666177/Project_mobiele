@@ -12,7 +12,7 @@ import {Itype} from '../../datatypes/Itype';
 export class CardService {
   private supabase: SupabaseClient;
 
-  //ik heb enkel photos nodig
+  //ik heb enkel photos nodig, ben niet zeker dat deze wel weg mag, al ik weet dat hier niets met foto's wordt gedaan
   private permissionGranted: PermissionStatus = {camera: 'granted', photos: 'granted'};
 
   constructor() {
@@ -20,15 +20,15 @@ export class CardService {
   }
 
   async getCards(): Promise<ICard[]>{
-    let {error,data} = await this.supabase
+    const {error,data} = await this.supabase
       .from('card')
       .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image')
       .order('name',{ascending: true});
     console.log('error kaarten opahelen: ' + error);
     console.log('data kaarten: ' + data);
-    if(error !== null){
-      data = null;
-    }
+    // if(error !== null){
+    //   data = null;
+    // }
     return data;
   }
 
@@ -67,6 +67,7 @@ export class CardService {
     }
   }
 
+  //ik ben zo dicht mogelijk gebleven met de benoemingen binnen supabase
   // eslint-disable-next-line @typescript-eslint/naming-convention
   async createCard(name: string, card_number: string ,type_id: number ,set_id: number ,
                    description: string ,condition: string ,value: number ,amount: number, image: string){
