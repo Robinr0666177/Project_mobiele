@@ -20,10 +20,15 @@ export class CardService {
   }
 
   async getCards(): Promise<ICard[]>{
-    const {data} = await this.supabase
+    let {error,data} = await this.supabase
       .from('card')
       .select('id,name,card_number,type_id,set_id,description,condition,value,amount,image')
       .order('name',{ascending: true});
+    console.log('error kaarten opahelen: ' + error);
+    console.log('data kaarten: ' + data);
+    if(error !== null){
+      data = null;
+    }
     return data;
   }
 

@@ -101,6 +101,7 @@ export class CardPage implements OnInit {
             const error =  await this.supabase.updateCard({
               id: this.id,
               name: this.name,
+              //ik ben hier zo dicht mogelijk gebleven bij benoemingen van supabase
               // eslint-disable-next-line @typescript-eslint/naming-convention
               card_number: this.cardNumber,
               // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -131,7 +132,6 @@ export class CardPage implements OnInit {
 
   async createCard()
   {
-    console.log('nieuwe kaart wordt gemaakt');
     let errorMessage = '';
     try {
       errorMessage = this.validateFields();
@@ -140,7 +140,6 @@ export class CardPage implements OnInit {
         this.addUpdateButtonIsClickable = false;
         if(this.photo){
           await this.uploadPhoto(true);
-          console.log('foto is niet null');
         }
         this.checkEmptyNumberFields();
         const {error} = await this.supabase.createCard(this.name,this.cardNumber,this.typeId,this.setId,
@@ -148,7 +147,7 @@ export class CardPage implements OnInit {
                                                        this.amount,this.image);
         console.log(error);
         await this.navController.back();
-        if(error !== null){
+        if(error){
           await this.presentToast('Het aanmaken van de kaart is niet geslaagd, kijk of dat je verbonden bent met het internet linksboven');
         }
         this.navController.back();
